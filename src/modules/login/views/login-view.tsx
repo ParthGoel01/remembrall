@@ -1,24 +1,42 @@
-import { providers } from "@/lib/auth";
-import { LoginOAuthProvider } from "../components/login-o-auth-provider";
-import { LoginWarning } from "../components/login-warning";
+"use client";
+// PERF: Should this be client component?
+
+import { client } from "@/lib/client";
+import { useQuery } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { LoginLoader } from "../components/login-loader";
+import { LoginWarning } from "../components/login-warning";
+import { NotFoundView } from "./not-found-view";
+import { UnauthenticatedView } from "./unauthenticated-view";
 
 export const LoginView = () => {
+  const {
+    data: status,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ["user-status"],
+    queryFn: async () => {
+      const res = await client.applicationAuth.getUserStatus.$get();
+      const { status } = await res.json();
+      return status;
+    },
+  });
+
   return (
     <main className="w-full h-screen grid place-items-center">
+      {error?.message}
       <Suspense>
         <LoginWarning />
       </Suspense>
-      <div className="flex flex-col items-center gap-3">
-        <h1 className="text-xl">Login</h1>
-        <ul className="flex items-center gap-5">
-          {providers.map((provider) => (
-            <li key={provider}>
-              <LoginOAuthProvider provider={provider} />
-            </li>
-          ))}
-        </ul>
-      </div>
+      {isPending ? (
+        <LoginLoader />
+      ) : status === "unauthorized" ? (
+        <UnauthenticatedView />
+      ) : (
+        // Authorized user should ideally have been redirected
+        <NotFoundView />
+      )}
     </main>
   );
 };

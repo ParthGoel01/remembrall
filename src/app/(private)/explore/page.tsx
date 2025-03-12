@@ -1,18 +1,23 @@
 "use client";
 
-import { client } from "@/lib/client";
-import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react";
 
 const Page = () => {
-  const { data, isPending } = useQuery({
-    queryKey: ["dummy"],
-    queryFn: async () => {
-      const response = await client.dummy.dummy.$get();
-      const result = await response.json();
-      return result;
-    },
-  });
-  return <div>{isPending ? "Loading" : data?.user.email}</div>;
+  return (
+    <div>
+      Explore page
+      <Button
+        onClick={async () => {
+          await signOut({
+            redirectTo: "/login",
+          });
+        }}
+      >
+        signout
+      </Button>
+    </div>
+  );
 };
 
 export default Page;

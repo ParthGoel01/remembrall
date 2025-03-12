@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -7,6 +8,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Dummy {
-  id Int @id @default(autoincrement())
+model User {
+  id             String  @id @default(cuid())
+  email          String  @unique
+  displayName    String
+  username       String  @unique
+  profilePicture String?
 }
