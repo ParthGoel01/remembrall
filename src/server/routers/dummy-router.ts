@@ -1,8 +1,9 @@
 import { router } from "../__internals/router";
-import { publicProcedure } from "../procedures";
+import { privateProcedure } from "../procedures";
 
 export const dummyRouter = router({
-  dummy: publicProcedure.query(async ({ c }) => {
-    return c.json({ message: "Hello, World!" });
+  dummy: privateProcedure.query(async ({ c, ctx }) => {
+    const { user } = ctx;
+    return c.json({ user, message: "Hello, World!" });
   }),
 });
