@@ -1,5 +1,5 @@
-export default function HeroSection() {
-    return (
-        <div>HeroSection</div>
-    )
-};
+export default function HeroSection(){
+  return(
+    <div>Hero-Section</div>
+  );
+}

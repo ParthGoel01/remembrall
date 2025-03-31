@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="relative w-full">
       <SignedOut>
-        <div className=""><HeroSection /></div>
+        <HeroSection />
         <DemoSection />
         <CTASection />
       </SignedOut>
