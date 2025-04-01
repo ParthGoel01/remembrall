@@ -14,83 +14,84 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  clerkId    String    @unique
-  name       String
+  id             String @id @default(uuid())
+  clerkId        String @unique
+  name           String
+  profilePicture String
 
-  memories   Memory[]  @relation("UserMemories")
-  comments   Comment[]
-  followers  Follows[] @relation("Following")
-  following  Follows[] @relation("Followers")
-  likes      Like[]
+  memories  Memory[]  @relation("UserMemories")
+  comments  Comment[]
+  followers Follows[] @relation("Following")
+  following Follows[] @relation("Followers")
+  likes     Like[]
 }
 
 model Memory {
-  id             String    @id @default(uuid())
-  authorId       String
-  visibility     Visibility
-  heading        String
-  description    String?
-  mediaUrl       String?
-  comments       Comment[]
-  likes          Like[]
-  memoryTags     MemoryTags[]
+  id          String       @id @default(uuid())
+  authorId    String
+  visibility  Visibility
+  heading     String
+  description String?
+  mediaUrl    String?
+  comments    Comment[]
+  likes       Like[]
+  memoryTags  MemoryTags[]
 
-  author         User      @relation("UserMemories", fields: [authorId], references: [id])
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  author    User     @relation("UserMemories", fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Comment {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   memoryId   String
   authorId   String
   content    String
-  timestamps DateTime  @default(now())
+  timestamps DateTime @default(now())
   parentId   String?
 
-  memory     Memory    @relation(fields: [memoryId], references: [id])
-  author     User      @relation(fields: [authorId], references: [id])
-  replies    Comment[] @relation("CommentReplies")
+  memory  Memory    @relation(fields: [memoryId], references: [id])
+  author  User      @relation(fields: [authorId], references: [id])
+  replies Comment[] @relation("CommentReplies")
 
-  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  parent Comment? @relation("CommentReplies", fields: [parentId], references: [id])
 }
 
 model Like {
-  id        String   @id @default(uuid())
-  memoryId  String
-  userId    String
+  id       String @id @default(uuid())
+  memoryId String
+  userId   String
 
-  memory    Memory   @relation(fields: [memoryId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  memory Memory @relation(fields: [memoryId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   @@unique([memoryId, userId])
 }
 
 model Tag {
-  id        String   @id @default(uuid())
-  tagName   String   @unique
+  id      String @id @default(uuid())
+  tagName String @unique
 
-  memories  MemoryTags[]
+  memories MemoryTags[]
 }
 
 model MemoryTags {
   memoryId String
   tagId    String
 
-  memory   Memory @relation(fields: [memoryId], references: [id])
-  tag      Tag    @relation(fields: [tagId], references: [id])
+  memory Memory @relation(fields: [memoryId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id])
 
   @@id([memoryId, tagId])
 }
 
 model Follows {
-  id          String   @id @default(uuid())
+  id          String @id @default(uuid())
   followerId  String
   followingId String
 
-  follower    User     @relation("Followers", fields: [followerId], references: [id])
-  following   User     @relation("Following", fields: [followingId], references: [id])
+  follower  User @relation("Followers", fields: [followerId], references: [id])
+  following User @relation("Following", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
 }
