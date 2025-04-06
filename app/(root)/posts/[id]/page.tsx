@@ -2,7 +2,13 @@ import Post from "@/components/post/post";
 import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma"; 
 
-export default async function PostPage({ params }: { params: {id:string}; }){
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function PostPage({ params }: PageProps){
   const memory = await prisma.memory.findUnique({
     where: { id: params.id },
     include: {
