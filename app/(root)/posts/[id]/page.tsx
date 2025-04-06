@@ -3,14 +3,14 @@ import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma"; 
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
-export default async function PostPage({ params }: PageProps){
+export default async function PostPage({ params }: PageProps) {
+  const { id } = await params;
+
   const memory = await prisma.memory.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       author: true,
       media: true,
@@ -47,7 +47,16 @@ export default async function PostPage({ params }: PageProps){
   };
 
   const user = await currentUser();
-  const postUrl = `https://remembrall-five.vercel.app/memory/${params.id}`;
-  // Test Url - http://localhost:3000/posts/7f4c6513-5af3-4495-bb03-b69439e7e853
-  return <Post {...transformedPost} postUrl={postUrl} currentUserProfilePicture={user?.imageUrl || "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"}/>;
+  const postUrl = `https://remembrall-five.vercel.app/memory/${id}`;
+
+  return (
+    <Post
+      {...transformedPost}
+      postUrl={postUrl}
+      currentUserProfilePicture={
+        user?.imageUrl ||
+        "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
+      }
+    />
+  );
 }
