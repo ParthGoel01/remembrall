@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-export const useEasyMDE = () => {
+export const useEasyMDE = ({
+  setData,
+}: {
+  setData: (data: string) => void;
+}) => {
   const [editor, setEditor] = useState<any>(null);
-  const [data, setData] = useState<string>("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -45,5 +48,5 @@ export const useEasyMDE = () => {
     }
   }, [editor]);
 
-  return { editor, textareaRef, data };
+  return { editor, textareaRef };
 };

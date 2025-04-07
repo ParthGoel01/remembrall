@@ -1,24 +1,14 @@
 "use client";
 
 import { useEasyMDE } from "@/hooks/use-easy-mde";
-import { Button } from "../ui/button";
 
 export const CustomEasyMDE = ({
-  onSubmit,
+  setData,
+  className,
 }: {
-  onSubmit: (data: string) => void;
+  setData: (data: string) => void;
+  className?: string;
 }) => {
-  const { textareaRef, data } = useEasyMDE();
-  return (
-    <div className="max-w-prose">
-      <textarea ref={textareaRef} />
-      <Button
-        onClick={() => {
-          onSubmit(data);
-        }}
-      >
-        Submit
-      </Button>
-    </div>
-  );
+  const { textareaRef } = useEasyMDE({ setData });
+  return <textarea className={className} ref={textareaRef} />;
 };
