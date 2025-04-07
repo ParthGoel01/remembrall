@@ -24,6 +24,7 @@ model User {
   followers Follows[] @relation("Following")
   following Follows[] @relation("Followers")
   likes     Like[]
+  @@map("user")
 }
 
 model Memory {
@@ -32,7 +33,7 @@ model Memory {
   visibility  Visibility
   heading     String
   description String?
-  mediaUrl    String?
+  media       Media[]
   comments    Comment[]
   likes       Like[]
   memoryTags  MemoryTags[]
@@ -40,6 +41,16 @@ model Memory {
   author    User     @relation("UserMemories", fields: [authorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@map("memory")
+}
+
+model Media {
+  id        String   @id @default(uuid())
+  url       String
+  type      String
+  memoryId  String
+  memory    Memory   @relation(fields: [memoryId], references: [id])
+  @@map("media")
 }
 
 model Comment {
@@ -55,6 +66,7 @@ model Comment {
   replies Comment[] @relation("CommentReplies")
 
   parent Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  @@map("comment")
 }
 
 model Like {
@@ -66,6 +78,7 @@ model Like {
   user   User   @relation(fields: [userId], references: [id])
 
   @@unique([memoryId, userId])
+  @@map("like")
 }
 
 model Tag {
@@ -73,6 +86,7 @@ model Tag {
   tagName String @unique
 
   memories MemoryTags[]
+  @@map("tag")
 }
 
 model MemoryTags {
@@ -83,6 +97,7 @@ model MemoryTags {
   tag    Tag    @relation(fields: [tagId], references: [id])
 
   @@id([memoryId, tagId])
+  @@map("memorytags")
 }
 
 model Follows {
@@ -94,6 +109,7 @@ model Follows {
   following User @relation("Following", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
+  @@map("follows")
 }
 
 enum Visibility {
