@@ -1,8 +1,11 @@
 "use client";
 
 import { newPostSchema, NewPostSchema } from "@/app/types/form-schemas";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SendHorizontal } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { CustomEasyMDE } from "../editor/easy-mde";
 import {
   Form,
   FormControl,
@@ -12,10 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { CustomEasyMDE } from "../editor/easy-mde";
-import { useState } from "react";
+import { TagInput } from "../editor/tag-input";
 
 export const NewPost = () => {
   const form = useForm<NewPostSchema>({
@@ -26,10 +27,12 @@ export const NewPost = () => {
   });
 
   const [editorData, setEditorData] = useState<string>("");
+  const [tags, setTags] = useState<string[]>([]);
 
   const onSubmit = async (data: NewPostSchema) => {
     console.log(editorData);
     console.log(data);
+    console.log(tags);
   };
 
   return (
@@ -63,14 +66,21 @@ export const NewPost = () => {
             <CustomEasyMDE setData={setEditorData} />
           </div>
         </div>
-        <Button
-          className="cursor-pointer"
+        <div>
+          <h2 className="text-sm pointer-events-none select-none">Tags</h2>
+          <div className="mt-2">
+            <TagInput tags={tags} setTags={setTags} />
+          </div>
+        </div>
+        <button
+          className="cursor-pointer bg-gradient-to-tr from-blue-400 to-blue-800 hover:from-blue-600 hover:to-blue-600 w-fit ml-auto flex gap-1.5 items-center justify-center focus-visible:ring-blue-200 focus-visible:ring-offset-1 group text-white rounded-md px-4 py-2 text-sm font-semibold shadow-sm active:scale-[0.9] hover:scale-[1.05] active:translate-y-[1px] transition-all"
           onClick={() => {
             onSubmit(form.getValues());
           }}
         >
-          Post
-        </Button>
+          <span className="block text-md">Post</span>
+          <SendHorizontal className="size-[13px] block" />
+        </button>
       </div>
     </main>
   );

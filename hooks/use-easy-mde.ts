@@ -27,6 +27,8 @@ export const useEasyMDE = ({
           "|",
           "link",
           "image",
+          "|",
+          "preview",
         ],
       });
 
